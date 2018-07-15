@@ -328,8 +328,7 @@ namespace Console_Task_Manager
 			Console.WriteLine("showword     - skrót 'sw' -> Pokazuje wszystkie zadania z listy, które zawierają podane słowo w opisie.");
 			Console.WriteLine("showlists    - skrót 'sl' -> Pokazuje wszystkie zapisane listy.\n");
 			Console.WriteLine("savetofile   - skrót 's'  -> Zapisuje aktualną listę do pliku csv.");
-			Console.WriteLine("loadfromfile - skrót 'l'  -> Wczytuje listę z pliku csv.\n");
-			Console.WriteLine("Do programu dodano listę 'Przykład', aby przetestować działanie powyższych komend.");
+			Console.WriteLine("loadfromfile - skrót 'l'  -> Wczytuje listę z pliku csv.");
 
 			ConsoleEx.WriteLineInGreen("Sukces!\n");
 		}
