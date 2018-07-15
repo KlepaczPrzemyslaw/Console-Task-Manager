@@ -3,7 +3,6 @@
 - Description: Project after 1 week of study C# at CodersLab
 - Project Description: A simple console application for managing tasks.
 - To run: 
-  1) You must download this repository.
-  2) You must run Console-Task-Manager.sln in Visual Studio.
-  3) You must press F5 to start debugging.
-  That's all.
+  1) Download this repository.
+  2) Run Console-Task-Manager.sln in Visual Studio.
+  3) Press F5 to start debugging.
