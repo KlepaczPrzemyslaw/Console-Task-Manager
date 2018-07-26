@@ -11,36 +11,36 @@ namespace Console_Task_Manager
 		// Not required
 		public DateTime? EndDate { get; protected set; }
 		// Not required
-		public bool? Flag_FullDayQuest { get; protected set; }
+		public bool? IsFullDayQuest { get; protected set; }
 		// Not required
-		public bool? Flag_TaskIsImportant { get; protected set; }
+		public bool? IsTaskImportant { get; protected set; }
 
-		public TaskModel(string description, DateTime startDate, DateTime? endDate, bool? flag_fullDayQuest, bool? flag_taskIsImportant)
+		public TaskModel(string description, DateTime startDate, DateTime? endDate, bool? isFullDayQuest, bool? isTaskImportant)
 		{
 			this.Description = description;
 			this.StartDate = startDate;
 			this.EndDate = endDate;
-			this.Flag_FullDayQuest = flag_fullDayQuest;
-			this.Flag_TaskIsImportant = flag_taskIsImportant;
+			this.IsFullDayQuest = isFullDayQuest;
+			this.IsTaskImportant = isTaskImportant;
 
-			if (endDate == null && flag_fullDayQuest == true)
+			if (endDate == null && isFullDayQuest == true)
 			{
 				this.EndDate = StartDate.AddDays(1);
 			}
 		}
 
-		public string GetTaskAsString()
+		public override string ToString()
 		{
 			return	$"- Opis: ( {Description} )\n" +
 					$"         - Start: ( {StartDate} )\n" +
 					$"         - Koniec: ( {EndDate} )\n" +
-					$"         - Czy to zadanie na cały dzień: ( {Flag_FullDayQuest} )\n" +
-					$"         - Czy to ważne zadanie: ( {Flag_TaskIsImportant} )";
+					$"         - Czy to zadanie na cały dzień: ( {IsFullDayQuest} )\n" +
+					$"         - Czy to ważne zadanie: ( {IsTaskImportant} )";
 		}
 
-		public string GetTaskAsStringForCSV()
+		public string ToCsv()
 		{
-			return $"{Description};{StartDate};{EndDate};{Flag_FullDayQuest};{Flag_TaskIsImportant}";
+			return $"{Description};{StartDate};{EndDate};{IsFullDayQuest};{IsTaskImportant}";
 		}
 	}
 }

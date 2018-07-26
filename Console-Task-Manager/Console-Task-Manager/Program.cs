@@ -15,11 +15,11 @@ namespace Console_Task_Manager
 			if (Directory.Exists("Lists") == false)
 				Directory.CreateDirectory("Lists");
 
-			ConsoleEx.WriteLineInYellow("--- Konsolowy Menadżer Zadań ---\n");
+			ConsoleEx.WriteLine("--- Konsolowy Menadżer Zadań ---\n", ConsoleColor.Yellow);
 
 			do
 			{
-				ConsoleEx.WriteLineInGreen("Wpisz komendę, lub help:");
+				ConsoleEx.WriteLine("Wpisz komendę, lub help:", ConsoleColor.Green);
 				command = Console.ReadLine().Trim().ToLower();
 				Console.Clear();
 
@@ -65,10 +65,10 @@ namespace Console_Task_Manager
 						SearchByWord(tasksList);
 						break;
 					default:
-						ConsoleEx.WriteLineInRed($"\"{command}\" -> To nieprawidłowa komenda!!!\n");
+						ConsoleEx.WriteLine($"\"{command}\" -> To nieprawidłowa komenda!!!\n", ConsoleColor.Red);
 						break;
 				}
-				ConsoleEx.WriteLineInYellow(" Nowe Polecenie ".PadLeft(24, '-').PadRight(32, '-') + "\n");
+				ConsoleEx.WriteLine(" Nowe Polecenie ".PadLeft(24, '-').PadRight(32, '-') + "\n", ConsoleColor.Yellow);
 			}
 			while (true);
 		}
@@ -82,9 +82,9 @@ namespace Console_Task_Manager
 		/// 	Wykorzystywane przez: SearchByWord() i ShowTasks()
 		/// </summary>
 
-		private static void SearchPart_1()
+		private static void ShowSearchHeader()
 		{
-			ConsoleEx.WriteLineInCyan(" Aktualne Zadania ".PadLeft(25, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Aktualne Zadania ".PadLeft(25, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 			Console.WriteLine("(Jeżeli w nawiasach nie ma parametru to nie został on podany)");
 		}
 
@@ -95,38 +95,38 @@ namespace Console_Task_Manager
 		/// <param name="tasksList"></param>
 		/// <param name="wordForSearch"></param>
 
-		private static void SearchPart_2(List<TaskModel> tasksList, string wordForSearch)
+		private static void ShowTasksList(List<TaskModel> tasksList, string wordForSearch)
 		{
-			ConsoleEx.WriteLineInRed("\nLista spóźnionych zadań:");
+			ConsoleEx.WriteLine("\nLista spóźnionych zadań:", ConsoleColor.Red);
 			var lateTasksList = tasksList.Where(x => x.Description.Contains(wordForSearch))
 						.Where(x => x.EndDate < DateTime.Now)
 						.OrderBy(x => x.StartDate);
 			foreach (TaskModel task in lateTasksList)
 			{
-				Console.Write($"Zadanie: {task.GetTaskAsString()}\n");
+				Console.Write($"Zadanie: {task.ToString()}\n");
 			}
 
-			ConsoleEx.WriteLineInRed("\nLista ważnych zadań:");
-			var importantTasksList = tasksList.Where(x => x.Flag_TaskIsImportant == true)
+			ConsoleEx.WriteLine("\nLista ważnych zadań:", ConsoleColor.Red);
+			var importantTasksList = tasksList.Where(x => x.IsTaskImportant == true)
 						.Where(x => x.Description.Contains(wordForSearch))
 						.Where(x => x.EndDate >= DateTime.Now || x.EndDate == null)
 						.OrderBy(x => x.StartDate);
 			foreach (TaskModel task in importantTasksList)
 			{
-				Console.Write($"Zadanie: {task.GetTaskAsString()}\n");
+				Console.Write($"Zadanie: {task.ToString()}\n");
 			}
 
-			ConsoleEx.WriteLineInGreen("\nPozostałe zadania:");
-			var notImportantTasksList = tasksList.Where(x => x.Flag_TaskIsImportant == false || x.Flag_TaskIsImportant == null)
+			ConsoleEx.WriteLine("\nPozostałe zadania:", ConsoleColor.Green);
+			var notImportantTasksList = tasksList.Where(x => x.IsTaskImportant == false || x.IsTaskImportant == null)
 						.Where(x => x.Description.Contains(wordForSearch))
 						.Where(x => x.EndDate >= DateTime.Now || x.EndDate == null)
 						.OrderBy(x => x.StartDate);
 			foreach (TaskModel task in notImportantTasksList)
 			{
-				Console.Write($"Zadanie: {task.GetTaskAsString()}\n");
+				Console.Write($"Zadanie: {task.ToString()}\n");
 			}
 
-			ConsoleEx.WriteLineInGreen("Sukces!\n");
+			ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Green);
 		}
 
 		/// <summary>
@@ -135,12 +135,12 @@ namespace Console_Task_Manager
 		/// </summary>
 		/// <param name="tasksList"></param>
 
-		private static void RemoveAndChangePart_1(List<TaskModel> tasksList)
+		private static void RemoveAndChangePart(List<TaskModel> tasksList)
 		{
 			Console.WriteLine("\nOto lista zadań z indeksami:\n");
 			for (int i = 0; i < tasksList.Count; i++)
 			{
-				Console.Write($"index {i}: {tasksList[i].GetTaskAsString()}\n");
+				Console.Write($"index {i}: {tasksList[i].ToString()}\n");
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace Console_Task_Manager
 		/// 	Wykorzystywane przez: ChangeTask() i AddTask()
 		/// </summary>
 
-		private static TaskModel GetTaskFromUserPart_1()
+		private static TaskModel GetTaskFromUserPart()
 		{
 			Console.Write("\nPodaj opis zadania: ");
 			string description = Console.ReadLine().Trim();
@@ -171,7 +171,7 @@ namespace Console_Task_Manager
 			}
 			catch (FormatException)
 			{
-				ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Datę należy podać według podanego schematu!!!\n");
+				ConsoleEx.WriteLine("Zadanie niewykonane!!! Datę należy podać według podanego schematu!!!\n", ConsoleColor.Red);
 				return null;
 			}
 
@@ -197,7 +197,7 @@ namespace Console_Task_Manager
 				}
 				catch (FormatException)
 				{
-					ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Datę należy podać według podanego schematu!!!\n");
+					ConsoleEx.WriteLine("Zadanie niewykonane!!! Datę należy podać według podanego schematu!!!\n", ConsoleColor.Red);
 					return null;
 				}
 
@@ -206,11 +206,11 @@ namespace Console_Task_Manager
 			Console.Write("Czy to zadanie na cały dzień? (Y/N) - lub wciśnij enter, gdy nie wiesz: ");
 			bool? flag_fullDayQuest;
 			string fullDayQuestString = Console.ReadLine().Trim();
-			if (fullDayQuestString == "Y")
+			if (fullDayQuestString.ToUpper() == "Y")
 			{
 				flag_fullDayQuest = true;
 			}
-			else if (fullDayQuestString == "N")
+			else if (fullDayQuestString.ToUpper() == "N")
 			{
 				flag_fullDayQuest = false;
 			}
@@ -222,11 +222,11 @@ namespace Console_Task_Manager
 			Console.Write("Czy to zadanie jest ważne? (Y/N) - lub wciśnij enter, gdy nie wiesz: ");
 			bool? flag_taskIsImportant;
 			string taskIsImportantString = Console.ReadLine().Trim();
-			if (taskIsImportantString == "Y")
+			if (taskIsImportantString.ToUpper() == "Y")
 			{
 				flag_taskIsImportant = true;
 			}
-			else if (taskIsImportantString == "N")
+			else if (taskIsImportantString.ToUpper() == "N")
 			{
 				flag_taskIsImportant = false;
 			}
@@ -249,31 +249,31 @@ namespace Console_Task_Manager
 
 		private static void ChangeTask(List<TaskModel> tasksList)
 		{
-			ConsoleEx.WriteLineInCyan(" Zmienianie Zadania ".PadLeft(26, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Zmienianie Zadania ".PadLeft(26, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 
-			RemoveAndChangePart_1(tasksList);
+			RemoveAndChangePart(tasksList);
 
 			ConsoleEx.Write(("\n" + "Podaj index zadania do zmienienia, lub enter by anulować: "), ConsoleColor.Red);
 			string ChosedIndex = Console.ReadLine().Trim();
 
 			if (string.IsNullOrWhiteSpace(ChosedIndex))
 			{
-				ConsoleEx.WriteLineInGreen("Niczego nie zmieniono!\n");
+				ConsoleEx.WriteLine("Niczego nie zmieniono!\n", ConsoleColor.Green);
 				return;
 			}
 
-			TaskModel task = GetTaskFromUserPart_1();
+			TaskModel task = GetTaskFromUserPart();
 
 			if (task != null)
 			{
 				try
 				{
 					tasksList[(int.Parse(ChosedIndex))] = task;
-					ConsoleEx.WriteLineInGreen("Sukces!\n");
+					ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Green);
 				}
 				catch (FormatException)
 				{
-					ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Indeks podajemy jako liczbę!!!\n");
+					ConsoleEx.WriteLine("Zadanie niewykonane!!! Indeks podajemy jako liczbę!!!\n", ConsoleColor.Red);
 				}
 			}
 		}
@@ -285,12 +285,12 @@ namespace Console_Task_Manager
 
 		private static void SearchByWord(List<TaskModel> tasksList)
 		{
-			SearchPart_1();
+			ShowSearchHeader();
 
 			Console.Write("\nPodaj słowo, według którego przeszukiwać opis: ");
 			string wordForSearch = Console.ReadLine().Trim();
 
-			SearchPart_2(tasksList, wordForSearch);
+			ShowTasksList(tasksList, wordForSearch);
 		}
 
 		/// <summary>
@@ -299,7 +299,7 @@ namespace Console_Task_Manager
 
 		private static void ShowLists()
 		{
-			ConsoleEx.WriteLineInCyan(" Dostępne Listy ".PadLeft(24, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Dostępne Listy ".PadLeft(24, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 			Console.WriteLine("\nOto dostępne listy:\n");
 
 			string[] lists = Directory.GetFiles("Lists");
@@ -308,7 +308,7 @@ namespace Console_Task_Manager
 				Console.WriteLine("--> " + fileInfo.Split('\\')[1]);
 			}
 
-			ConsoleEx.WriteLineInGreen("Sukces!\n");
+			ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Red);
 		}
 
 		/// <summary>
@@ -317,7 +317,7 @@ namespace Console_Task_Manager
 
 		private static void Help()
 		{
-			ConsoleEx.WriteLineInCyan(" Help ".PadLeft(19, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Help ".PadLeft(19, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 			Console.WriteLine("\nOto lista komend:\n");
 			Console.WriteLine("help         - skrót 'h'  -> Wyświetla listę dostępnych komend.");
 			Console.WriteLine("exit         - skrót 'e'  -> Wychodzi z programu.\n");
@@ -330,7 +330,7 @@ namespace Console_Task_Manager
 			Console.WriteLine("savetofile   - skrót 's'  -> Zapisuje aktualną listę do pliku csv.");
 			Console.WriteLine("loadfromfile - skrót 'l'  -> Wczytuje listę z pliku csv.");
 
-			ConsoleEx.WriteLineInGreen("Sukces!\n");
+			ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Green);
 		}
 
 		/// <summary>
@@ -340,14 +340,14 @@ namespace Console_Task_Manager
 
 		private static void LoadTasks(List<TaskModel> tasksList)
 		{
-			ConsoleEx.WriteLineInCyan(" Wczytywanie do Pliku ".PadLeft(27, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Wczytywanie do Pliku ".PadLeft(27, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 			Console.Write("\nPodaj nazwę pliku (bez rozszerzenia): ");
 			string myPath = Console.ReadLine().Trim().Replace(@"\", "_").Replace("/", "_").Replace(":", "_").Replace("*", "_").Replace("?", "_")
 					.Replace("\"", "_").Replace("<", "_").Replace(@">", "_").Replace("|", "_"); ;
 
 			if (File.Exists(@"Lists/" + myPath + ".csv") == false)
 			{
-				ConsoleEx.WriteLineInRed("Plik nie istnieje!!!\n");
+				ConsoleEx.WriteLine("Plik nie istnieje!!!\n", ConsoleColor.Red);
 				return;
 			}
 
@@ -395,18 +395,18 @@ namespace Console_Task_Manager
 					tasksList.Add(new TaskModel(taskInParts[0], DateTime.Parse(taskInParts[1]), endDate, forAllDay, importantTask));
 				}
 
-				ConsoleEx.WriteLineInGreen("Sukces!");
-				ConsoleEx.WriteLineInGreen("Lista została wczytana!\n");
+				ConsoleEx.WriteLine("Sukces!", ConsoleColor.Green);
+				ConsoleEx.WriteLine("Lista została wczytana!\n", ConsoleColor.Green);
 			}
 			catch (FormatException)
 			{
 				tasksList.Clear();
-				ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Ktoś popsuł plik!!!\n");
+				ConsoleEx.WriteLine("Zadanie niewykonane!!! Ktoś popsuł plik!!!\n", ConsoleColor.Red);
 			}
 			catch (IndexOutOfRangeException)
 			{
 				tasksList.Clear();
-				ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Ktoś popsuł plik!!!\n");
+				ConsoleEx.WriteLine("Zadanie niewykonane!!! Ktoś popsuł plik!!!\n", ConsoleColor.Red);
 			}
 		}
 
@@ -417,14 +417,14 @@ namespace Console_Task_Manager
 
 		private static void SaveTasks(List<TaskModel> tasksList)
 		{
-			ConsoleEx.WriteLineInCyan(" Zapis do Pliku ".PadLeft(24, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Zapis do Pliku ".PadLeft(24, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 			Console.Write("\nPodaj nazwę dla swojej listy (bez rozszerzenia): ");
 			string myPath = Console.ReadLine().Trim().Replace(@"\", "_").Replace("/", "_").Replace(":", "_").Replace("*", "_").Replace("?", "_")
 					.Replace("\"", "_").Replace("<", "_").Replace(@">", "_").Replace("|", "_");
 
 			if (File.Exists(@"Lists/" + myPath + ".csv"))
 			{
-				ConsoleEx.WriteLineInRed("Plik istnieje!!!\n");
+				ConsoleEx.WriteLine("Plik istnieje!!!\n", ConsoleColor.Red);
 				return;
 			}
 
@@ -432,13 +432,13 @@ namespace Console_Task_Manager
 
 			foreach (TaskModel task in tasksList)
 			{
-				tasksInStringList.Add(task.GetTaskAsStringForCSV());
+				tasksInStringList.Add(task.ToCsv());
 			}
 
 			File.WriteAllLines((@"Lists/" + myPath + ".csv"), tasksInStringList);
-			ConsoleEx.WriteLineInGreen("Sukces!");
+			ConsoleEx.WriteLine("Sukces!", ConsoleColor.Green);
 			tasksList.Clear();
-			ConsoleEx.WriteLineInGreen("Lista została wyczyszczona!\n");
+			ConsoleEx.WriteLine("Lista została wyczyszczona!\n", ConsoleColor.Green);
 		}
 
 		/// <summary>
@@ -448,8 +448,8 @@ namespace Console_Task_Manager
 
 		private static void ShowTasks(List<TaskModel> tasksList)
 		{
-			SearchPart_1();
-			SearchPart_2(tasksList, "");
+			ShowSearchHeader();
+			ShowTasksList(tasksList, "");
 		}
 
 		/// <summary>
@@ -459,27 +459,27 @@ namespace Console_Task_Manager
 
 		private static void RemoveTask(List<TaskModel> tasksList)
 		{
-			ConsoleEx.WriteLineInCyan(" Usuwanie Zadania ".PadLeft(25, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Usuwanie Zadania ".PadLeft(25, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 
-			RemoveAndChangePart_1(tasksList);
+			RemoveAndChangePart(tasksList);
 
 			ConsoleEx.Write(("\n" + "Podaj index zadania do usunięcia, lub enter by anulować: "), ConsoleColor.Red);
 			string ChosedIndex = Console.ReadLine().Trim();
 
 			if (string.IsNullOrWhiteSpace(ChosedIndex))
 			{
-				ConsoleEx.WriteLineInGreen("Niczego nie usunięto!\n");
+				ConsoleEx.WriteLine("Niczego nie usunięto!\n", ConsoleColor.Green);
 				return;
 			}
 
 			try
 			{
 				tasksList.RemoveAt(int.Parse(ChosedIndex));
-				ConsoleEx.WriteLineInGreen("Sukces!\n");
+				ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Green);
 			}
 			catch (FormatException)
 			{
-				ConsoleEx.WriteLineInRed("Zadanie niewykonane!!! Indeks podajemy jako liczbę!!!\n");
+				ConsoleEx.WriteLine("Zadanie niewykonane!!! Indeks podajemy jako liczbę!!!\n", ConsoleColor.Red);
 			}
 		}
 
@@ -490,14 +490,14 @@ namespace Console_Task_Manager
 
 		private static void AddTask(List<TaskModel> tasksList)
 		{
-			ConsoleEx.WriteLineInCyan(" Dodawanie Nowego Zadania ".PadLeft(29, '-').PadRight(32, '-'));
+			ConsoleEx.WriteLine(" Dodawanie Nowego Zadania ".PadLeft(29, '-').PadRight(32, '-'), ConsoleColor.Cyan);
 
-			TaskModel task = GetTaskFromUserPart_1();
+			TaskModel task = GetTaskFromUserPart();
 
 			if (task != null)
 			{
 				tasksList.Add(task);
-				ConsoleEx.WriteLineInGreen("Sukces!\n");
+				ConsoleEx.WriteLine("Sukces!\n", ConsoleColor.Green);
 			}
 		}
 	}
