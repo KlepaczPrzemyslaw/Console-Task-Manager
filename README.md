@@ -1,4 +1,4 @@
-# Console-Task-Manager
+# Console-Task-Manager [C# - Console App]
 - Project Date: 13-07-2018 to 15-07-2018
 - Description: Project after 1 week of study C# at CodersLab
 - Project Description: A simple console application for managing tasks.
